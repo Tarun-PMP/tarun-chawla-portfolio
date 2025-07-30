@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarun Chawla - Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chosen Palette: Professional Blue-Gray (Clean neutrals with strong blue accents) -->
+    <!-- Application Structure Plan: A single-page application with distinct, scrollable sections: Hero (introduction), About (detailed bio), Skills (categorized list), Experience (timeline/list of roles), and Contact (form). This structure provides a clear, linear flow for visitors while allowing quick navigation via internal links. Each section is designed to be visually distinct yet cohesive, facilitating easy consumption of information. -->
+    <!-- Visualization & Content Choices: Hero: Textual introduction with a call to action. About: Textual bio. Skills: Categorized list with professional icons. Experience: Detailed list of roles with key responsibilities. Contact: Simple HTML form. Goal: Inform, Showcase, Engage. Method: Primarily textual content with card-based layouts for projects/experience. Interaction: Smooth scrolling navigation, and a back-to-top button. Library: Vanilla JS and Tailwind CSS. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+            background: radial-gradient(at top left, #e0f7fa, #b2ebf2, #e0f7fa); /* Light blue gradient */
+            background-attachment: fixed;
+            color: #263238; /* Dark gray for text */
+        }
+        .section-padding {
+            padding-top: 6rem;
+            padding-bottom: 6rem;
+        }
+        @media (min-width: 768px) {
+            .section-padding {
+                padding-top: 8rem;
+                padding-bottom: 8rem;
+            }
+        }
+        .nav-link.active {
+            color: #0288d1; /* Light blue-800 */
+            border-bottom: 2px solid #0288d1;
+        }
+        /* Custom styles */
+        .hero-bg-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zm0 30V0h-2v4h-4v2h4v4h2V6h4V4h-4zm0 30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zm0-30V0H4v4H0v2h4v4h2V6H4V4H0zm0 30V0H4v4H0v2h4v4h2V6H4V4H0zm0 30V0H4v4H0v2h4v4h2V6H4V4H0zM36 4v-4h-2v4h-4v2h4v4h2V6h4V4h-4zm0 30v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 30v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 4v-4H4v4H0v2h4v4h2V6H4V4H0zm0 30v-4H4v4H0v2h4v4h2v-4h4v-2H6zm0 30v-4H4v4H0v2h4v4h2v-4h4v-2H6zM0 36v-2h2v2h4v2H2v4H0v-4zm0 30v-2h2v2h4v2H2v4H0v-4zM30 36v-2h2v2h4v2h-4v4h-2v-4zm0 30v-2h2v2h4v2h-4v4h-2v-4zM30 0v-2h2v2h4v2h-4v4h-2v-4zM0 0v-2h2v2h4v2H2v4H0v-4z'%3E%3C/path%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            background-size: 60px 60px;
+            background-repeat: repeat;
+        }
+        .card-hover-effect {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover-effect:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15), 0 8px 8px rgba(0,0,0,0.1);
+        }
+        .skill-item {
+            display: flex;
+            align-items: center;
+            background-color: #e3f2fd; /* blue-50 */
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #bbdefb; /* blue-100 */
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .skill-item:hover {
+            background-color: #90caf9; /* blue-200 */
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+        }
+        .skill-item span {
+            margin-right: 0.75rem;
+            font-size: 1.25rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+            opacity: 0;
+        }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+
+        /* Section title underline effect */
+        .section-title-underline {
+            position: relative;
+            display: inline-block;
+        }
+        .section-title-underline::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -8px;
+            width: 0;
+            height: 3px;
+            background-color: #0288d1; /* blue-800 */
+            transform: translateX(-50%);
+            transition: width 0.3s ease-out;
+        }
+        .section-title-underline:hover::after {
+            width: 100%;
+        }
+
+        /* Back to Top Button */
+        #back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #0288d1; /* blue-800 */
+            color: white;
+            padding: 1rem;
+            border-radius: 9999px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+        }
+        #back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        #back-to-top:hover {
+            background-color: #01579b; /* darker blue */
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body class="bg-blue-50 text-blue-900">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg fixed w-full z-20 top-0">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="#hero" class="text-2xl font-bold text-blue-800 hover:text-blue-600 transition duration-300">Tarun Chawla</a>
+            <div class="hidden md:flex space-x-8">
+                <a href="#about" class="nav-link text-slate-600 hover:text-blue-600 transition duration-300 font-medium">About</a>
+                <a href="#skills" class="nav-link text-slate-600 hover:text-blue-600 transition duration-300 font-medium">Skills</a>
+                <a href="#experience" class="nav-link text-slate-600 hover:text-blue-600 transition duration-300 font-medium">Experience</a>
+                <a href="#contact" class="nav-link text-slate-600 hover:text-blue-600 transition duration-300 font-medium">Contact</a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden text-slate-600 focus:outline-none p-2 rounded-md hover:bg-slate-100 transition duration-300">
+                <span class="text-2xl">☰</span>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg py-4">
+            <a href="#about" class="block px-4 py-2 text-slate-700 hover:bg-slate-100 transition duration-200">About</a>
+            <a href="#skills" class="block px-4 py-2 text-slate-700 hover:bg-slate-100 transition duration-200">Skills</a>
+            <a href="#experience" class="block px-4 py-2 text-slate-700 hover:bg-slate-100 transition duration-200">Experience</a>
+            <a href="#contact" class="block px-4 py-2 text-slate-700 hover:bg-slate-100 transition duration-200">Contact</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="bg-gradient-to-r from-blue-500 to-blue-700 text-white section-padding flex items-center min-h-screen relative overflow-hidden">
+        <div class="absolute inset-0 hero-bg-pattern z-0"></div>
+        <div class="container mx-auto px-4 text-center relative z-10">
+            <h1 class="text-4xl md:text-6xl font-bold mb-4 animate-fade-in-up">Hello, I'm Tarun Chawla 👋</h1>
+            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto animate-fade-in-up delay-100">A Certified Project Management Professional (PMP®) with over 10 years of experience in Project Management & Scheduling.</p>
+            <a href="#experience" class="bg-white text-blue-700 hover:bg-blue-100 font-semibold py-3 px-8 rounded-full shadow-lg transition duration-300 inline-block transform hover:scale-105 animate-fade-in-up delay-200">View My Experience</a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="bg-white section-padding">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-blue-800 mb-10 section-title-underline">About Me</h2>
+            <div class="flex flex-col md:flex-row items-center gap-8">
+                <div class="w-full md:w-1/3 flex-shrink-0">
+                    <!-- Image provided in the CV -->
+                    <img src="https://raw.githubusercontent.com/Ishan0828/Ishan-portfolio/refs/heads/main/tarunpic.png" alt="Tarun Chawla Photo" class="rounded-full w-48 h-48 mx-auto object-cover shadow-xl border-4 border-blue-200 transform hover:scale-105 transition duration-300">
+                </div>
+                <div class="w-full md:w-2/3 text-lg text-slate-700 leading-relaxed">
+                    <p class="mb-4">A decisive professional with over 10 years of experience in project management and workshop planning, including scheduling, monitoring, and controlling, cost management, and MIS for EPC projects.</p>
+                    <p class="mb-4">Certified Project Management Professional PMP® from PMI. Skilled in schedule development, creating reports, and monitoring activities. Proficient in Primavera (P6), MS Project, Microsoft Power BI, Tableau, and Microsoft 365 tools.</p>
+                    <p>Strong understanding of contracts, scope of work, scheduling, delivery timelines, change orders, and stakeholder management. Effectively coordinates with multiple engineering disciplines and construction management personnel to achieve targeted goals.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="bg-blue-50 section-padding">
+        <div class="container mx-auto px-4 max-w-5xl">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-blue-800 mb-10 section-title-underline">My Skills</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-md border border-blue-100 card-hover-effect">
+                    <h3 class="text-2xl font-semibold text-blue-700 mb-4">Core Competencies</h3>
+                    <ul class="list-none space-y-3 text-slate-700">
+                        <li class="skill-item"><span>📊</span> Project Management</li>
+                        <li class="skill-item"><span>📈</span> MIS Reporting & Progress Monitoring</li>
+                        <li class="skill-item"><span>⚙️</span> Project & Workshop Planning</li>
+                        <li class="skill-item"><span>🔍</span> Data Analysis using Power BI</li>
+                        <li class="skill-item"><span>⏱️</span> Scheduling & Controlling</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-blue-100 card-hover-effect">
+                    <h3 class="text-2xl font-semibold text-blue-700 mb-4">Technical Skills</h3>
+                    <ul class="list-none space-y-3 text-slate-700">
+                        <li class="skill-item"><span>📈</span> Power BI, MS Excel</li>
+                        <li class="skill-item"><span>🗓️</span> Primavera (P6), Microsoft Project (MSP)</li>
+                        <li class="skill-item"><span>💻</span> SAP, Power Apps, Power Automation</li>
+                        <li class="skill-item"><span>📊</span> Tableau</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-blue-100 card-hover-effect">
+                    <h3 class="text-2xl font-semibold text-blue-700 mb-4">Soft Skills & Languages</h3>
+                    <ul class="list-none space-y-3 text-slate-700">
+                        <li class="skill-item"><span>🗣️</span> Effective Communication</li>
+                        <li class="skill-item"><span>🤝</span> Leadership ability</li>
+                        <li class="skill-item"><span>🧠</span> Multi-tasking</li>
+                        <li class="skill-item"><span>🇬🇧</span> English (Proficient)</li>
+                        <li class="skill-item"><span>🇩🇪</span> German (Beginner)</li>
+                        <li class="skill-item"><span>🇮🇳</span> Hindi (Proficient)</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-blue-100 card-hover-effect">
+                    <h3 class="text-2xl font-semibold text-blue-700 mb-4">Certifications</h3>
+                    <ul class="list-none space-y-3 text-slate-700">
+                        <li class="skill-item"><span>🏅</span> Project Management Professional PMP® from PMI</li>
+                        <li class="skill-item"><span>📈</span> Business Intelligence using Power BI and Tableau from Grant Thornton (US)</li>
+                        <li class="skill-item"><span>🗓️</span> Primavera P6 Enterprise Project Portfolio Management 8 Certified Implementation Specialist from Udemy</li>
+                        <li class="skill-item"><span>📦</span> Logistics Management: International Transport and Shipping from Udemy</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="bg-white section-padding">
+        <div class="container mx-auto px-4 max-w-6xl">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-blue-800 mb-10 section-title-underline">Professional Experience</h2>
+            <div class="space-y-12">
+                <!-- SMS Group -->
+                <div class="bg-blue-50 p-8 rounded-xl shadow-md border border-blue-100 card-hover-effect">
+                    <h3 class="text-2xl font-semibold text-blue-700 mb-2">Global Project Scheduler - SMS Group</h3>
+                    <p class="text-slate-600 text-sm mb-4">Jan/24 – Present | JSW Dolvi & Tata Steel (Customers)</p>
+                    <p class="text-slate-700 mb-4">SMS group is global leading in metallurgical plant construction and machinery, specializing in the development, design, and services for the steel and metals industry.</p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-2">
+                        <li>Developed an integrated project schedule with over 6,000-line items (Level 1 to Level 4 EPC) using P6/MSP, creating and maintaining the overall project baseline.</li>
+                        <li>Developed Project Monitoring and Control tools (S-Curve) & evaluated work schedules.</li>
+                        <li>Conducted internal global stakeholder meetings across three countries for schedule review and updates.</li>
+                        <li>Involved in developing integrated schedules by creating activities and relationships from macro-enabled Excel, exporting to MSP and P6 for enhanced granularity and 90% critical path accuracy.</li>
+                        <li>Assisted project teams in developing and maintaining timely project review reports.</li>
+                        <li>Established and presented corrective action plans and mitigation strategies based on schedule risk assessment and critical path analysis.</li>
+                        <li>Integrated inter-discipline schedule requirements and constraints for logical work sequence.</li>
+                    </ul>
+                </div>
+
+                <!-- Danieli Corus India Pvt Ltd. -->
+                <div class="bg-blue-50 p-8 rounded-xl shadow-md border border-blue-100 card-hover-effect">
+                    <h3 class="text-2xl font-semibold text-blue-700 mb-2">Deputy Manager (Project Management Office) - Danieli Corus India Pvt Ltd.</h3>
+                    <p class="text-slate-600 text-sm mb-4">Oct/22 – Dec/23 | AMNS & Tata Steel (Customers)</p>
+                    <p class="text-slate-700 mb-4">Danieli Corus provides engineering, plant design, and consultancy services for the iron, steel, and non-ferrous metals industries.</p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-2">
+                        <li>Developed and updated reports for project budgeted hours versus actual and forecasted hours.</li>
+                        <li>Automated data update processes for management dashboards in Power BI, increasing update frequency from monthly to weekly.</li>
+                        <li>Updated and maintained the Lessons Learned register, providing reports to management on open and closed lessons learned through a Power BI dashboard.</li>
+                        <li>Constantly interacted with Project Managers, discipline leads, engineering, procurement, and construction for elaboration of Project activities and schedule control.</li>
+                        <li>Integrated inter-discipline schedule requirements and constraints for logical work sequence.</li>
+                        <li>Prepared project L1, L2, L3 schedules with CPM devising critical path and near critical activities for optimal control measures.</li>
+                    </ul>
+                </div>
+
+                <!-- Flovel Energy Pvt Ltd. -->
+                <div class="bg-blue-50 p-8 rounded-xl shadow-md border border-blue-100 card-hover-effect">
+                    <h3 class="text-2xl font-semibold text-blue-700 mb-2">Lead Planning Engineer - Flovel Energy Pvt Ltd.</h3>
+                    <p class="text-slate-600 text-sm mb-4">June/19 – Oct/22</p>
+                    <p class="text-slate-700 mb-4">Flovel Energy specializes in providing turnkey solutions for hydroelectric power projects.</p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-2">
+                        <li>Coordinated with Planning Manager, Design, and Project Departments for changes.</li>
+                        <li>Understood project requirements by studying drawings and creating PRs for B/O and raw material.</li>
+                        <li>Developed Level 4 (L4) project schedules using Microsoft Project (MSP) based on Level 3 (L3) planning and updated workshop plans.</li>
+                        <li>Assisted Master Scheduler in updating Level 3 (L3) schedule based on Level 4 (L4) workshop schedule.</li>
+                        <li>Conducted weekly meetings with workshop stakeholders to align actual work with plans.</li>
+                        <li>Conducted detailed studies of fabrication drawings and created purchase requisitions for steel plates.</li>
+                    </ul>
+                </div>
+
+                <!-- Preet Machine Limited. -->
+                <div class="bg-blue-50 p-8 rounded-xl shadow-md border border-blue-100 card-hover-effect">
+                    <h3 class="text-2xl font-semibold text-blue-700 mb-2">Project Planning Engineer - Preet Machine Limited.</h3>
+                    <p class="text-slate-600 text-sm mb-4">April/18 – June/19</p>
+                    <p class="text-slate-700 mb-4">Preet Machine Limited is a leading Manufacturer of rolling mills and equipment for the steel and metal industry.</p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-2">
+                        <li>Conducted detailed study of project contracts to understand project timelines and developed detailed plans.</li>
+                        <li>Created purchase requisitions and managed work transfers based on scope division list.</li>
+                        <li>Held weekly meetings with the Workshop Manager to ensure work aligned with the project timeline.</li>
+                        <li>Prepared project L3 schedule with CPM devising critical path and near critical activities.</li>
+                    </ul>
+                </div>
+
+                <!-- Oriental Engineering Pvt Ltd. -->
+                <div class="bg-blue-50 p-8 rounded-xl shadow-md border border-blue-100 card-hover-effect">
+                    <h3 class="text-2xl font-semibold text-blue-700 mb-2">Planning Engineer - Oriental Engineering Pvt Ltd.</h3>
+                    <p class="text-slate-600 text-sm mb-4">March/16 – April/18</p>
+                    <p class="text-slate-700 mb-4">OEW specializes in manufacturing and supplying precision-engineered industrial components and equipment.</p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-2">
+                        <li>Proficient in resource planning and materials tracking. Conducted time studies for manufacturing processes.</li>
+                        <li>Developed monthly manufacturing plans for the workshop and oversaw their execution.</li>
+                        <li>Capable of reducing costs by optimizing tools and increasing productivity.</li>
+                        <li>Skilled in analyzing rework and rejection to identify root causes and implement corrective measures.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education Section -->
+    <section id="education" class="bg-blue-50 section-padding">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-blue-800 mb-10 section-title-underline">Education</h2>
+            <div class="bg-white p-8 rounded-xl shadow-md border border-blue-100">
+                <div class="mb-6">
+                    <h3 class="text-xl font-semibold text-blue-700">Bachelor's degree in Mechanical Engineering</h3>
+                    <p class="text-slate-700">Kurukshetra University, India</p>
+                    <p class="text-slate-600 text-sm">2011-2015</p>
+                    <p class="text-slate-700 mt-2">Specialization: Scheduling, Project management & time study.</p>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold text-blue-700">Diploma in Engineering</h3>
+                    <p class="text-slate-700">Yamuna Institute of Engineering & Technology</p>
+                    <p class="text-slate-600 text-sm">2015</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="bg-white section-padding">
+        <div class="container mx-auto px-4 max-w-2xl">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-blue-800 mb-10 section-title-underline">Get in Touch</h2>
+            <p class="text-center text-lg text-slate-700 mb-8">Have a question or want to collaborate? Feel free to reach out!</p>
+            <form action="https://formspree.io/f/xdkdzeay" method="POST" class="bg-blue-50 p-8 rounded-xl shadow-md border border-blue-100">
+                <div class="mb-4">
+                    <label for="name" class="block text-slate-700 text-sm font-bold mb-2">Name</label>
+                    <input type="text" id="name" name="name" class="shadow appearance-none border rounded w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Your Name">
+                </div>
+                <div class="mb-4">
+                    <label for="email" class="block text-slate-700 text-sm font-bold mb-2">Email</label>
+                    <input type="email" id="email" name="email" class="shadow appearance-none border rounded w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" value="tarun.mechanical.engineer@gmail.com" readonly>
+                </div>
+                <div class="mb-6">
+                    <label for="message" class="block text-slate-700 text-sm font-bold mb-2">Message</label>
+                    <textarea id="message" name="message" rows="6" class="shadow appearance-none border rounded w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Your message..."></textarea>
+                </div>
+                <div class="flex items-center justify-center">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full focus:outline-none focus:shadow-outline transition duration-300">Send Message</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-blue-900 text-white py-8 text-center">
+        <div class="container mx-auto px-4">
+            <p>&copy; 2024 Tarun Chawla. All rights reserved.</p>
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="https://www.linkedin.com/in/tarun-chawla-35045a70/" target="_blank" class="text-slate-300 hover:text-blue-400 transition duration-300">LinkedIn</a>
+                <!-- Add other social links if available -->
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" title="Back to Top">↑</button>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                // Close mobile menu if open
+                const mobileMenu = document.getElementById('mobile-menu');
+                if (!mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Back to Top button logic
+        const backToTopButton = document.getElementById('back-to-top');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) { // Show button after scrolling 300px
+                backToTopButton.classList.add('show');
+            } else {
+                backToTopButton.classList.remove('show');
+            }
+        });
+
+        backToTopButton.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
+</body>
+</html>
